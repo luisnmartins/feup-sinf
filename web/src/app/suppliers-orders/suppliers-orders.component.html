@@ -7,8 +7,7 @@
     </mat-panel-title>
     <mat-panel-description>
       <!-- {{ order.date | date:'d MMM y'}} -->
-      {{ dateDiff(order.date,today) + ' '}}
-      {{ dateDiff(order.date,today) >= 0 ? 'day(s) left': 'day(s) overdue'}}
+      {{ dateDiff(order.date,today) }}
     </mat-panel-description>
   </mat-expansion-panel-header>
   <!-- panel content bellow-->
