@@ -1,2 +1,17 @@
-<h2>Suppliers Orders</h2>
-<app-order *ngFor="let order of orders" [order]="order"></app-order>
+<h3>Suppliers Orders</h3>
+<button mat-stroked-button>Create Route</button>
+<mat-expansion-panel *ngFor="let order of orders">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      {{ order.name }}
+    </mat-panel-title>
+    <mat-panel-description>
+      <!-- {{ order.date | date:'d MMM y'}} -->
+      {{ dateDiff(order.date,today) + ' '}}
+      {{ dateDiff(order.date,today) >= 0 ? 'day(s) left': 'day(s) overdue'}}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <!-- panel content bellow-->
+  <app-order [order]="order"></app-order>
+</mat-expansion-panel>
+

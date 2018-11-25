@@ -16,15 +16,19 @@ import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { SuppliersOrdersComponent } from './suppliers-orders/suppliers-orders.component';
 import { OrderComponent } from './order/order.component';
-import { MatTableModule, MatCheckboxModule } from '@angular/material';
+import { MatTableModule, MatCheckboxModule, MatExpansionModule, MatButtonModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         ReactiveFormsModule,
         HttpClientModule,
         MatTableModule,
         MatCheckboxModule,
+        MatExpansionModule,
+        MatButtonModule,
         routing
     ],
     declarations: [

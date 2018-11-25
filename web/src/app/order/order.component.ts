@@ -34,7 +34,7 @@ export class OrderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.displayedColumns = ['name', 'quantity', 'location', 'warehouse'];
+    this.displayedColumns = ['select', 'name', 'quantity', 'location', 'warehouse'];
     this.dataSource = new MatTableDataSource<Product>(this.order.content);
     this.selection = new SelectionModel<Product>(true, []);
   }
