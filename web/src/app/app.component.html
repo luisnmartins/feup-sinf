@@ -2,6 +2,8 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
     <div class="navbar-nav">
         <a class="nav-item nav-link" routerLink="/">Home</a>
+        <a class="nav-item nav-link" routerLink="/suppliersOrders">Suppliers' Orders</a>
+        <a class="nav-item nav-link" routerLink="/customerOrders">Customers' Orders</a>
         <a class="nav-item nav-link" (click)="logout()">Logout</a>
     </div>
 </nav>
@@ -18,7 +20,7 @@
     </div>
 </div>
 
-<!-- credits -->
+<!-- credits
 <div class="text-center">
     <p>
         <a href="http://jasonwatmore.com/post/2018/10/29/angular-7-user-registration-and-login-example-tutorial" target="_top">Angular 7 - User Registration and Login Example & Tutorial</a>
@@ -26,4 +28,4 @@
     <p>
         <a href="http://jasonwatmore.com" target="_top">JasonWatmore.com</a>
     </p>
-</div>
+</div> -->

@@ -14,12 +14,17 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
+import { SuppliersOrdersComponent } from './suppliers-orders/suppliers-orders.component';
+import { OrderComponent } from './order/order.component';
+import { MatTableModule, MatCheckboxModule } from '@angular/material';
 
 @NgModule({
     imports: [
         BrowserModule,
         ReactiveFormsModule,
         HttpClientModule,
+        MatTableModule,
+        MatCheckboxModule,
         routing
     ],
     declarations: [
@@ -27,7 +32,9 @@ import { RegisterComponent } from './register';
         AlertComponent,
         HomeComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        SuppliersOrdersComponent,
+        OrderComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
