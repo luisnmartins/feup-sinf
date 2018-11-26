@@ -1,8 +1,8 @@
-<h3>Suppliers Orders</h3>
+<h3>Customers Orders</h3>
 <button mat-raised-button>Create Route</button>
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<div *ngIf="orders && !orders.length && !isLoading">You have no unfulfilled suppliers' orders</div>
-<div *ngIf="hasErrors">Error getting suppliers' orders</div>
+<div *ngIf="orders && !orders.length && !isLoading">You have no unfulfilled customers' orders</div>
+<div *ngIf="hasErrors">Error getting customer' orders</div>
 <mat-expansion-panel *ngFor="let order of orders">
   <mat-expansion-panel-header>
     <mat-panel-title>
@@ -16,4 +16,3 @@
   <!-- panel content bellow-->
   <app-order [order]="order"></app-order>
 </mat-expansion-panel>
-

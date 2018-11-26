@@ -4,11 +4,11 @@ import { Component, OnInit } from '@angular/core';
 import { Order } from '@app/_models';
 
 @Component({
-  selector: 'app-suppliers-orders',
-  templateUrl: './suppliers-orders.component.html',
-  styleUrls: ['./suppliers-orders.component.css']
+  selector: 'app-customers-orders',
+  templateUrl: './customers-orders.component.html',
+  styleUrls: ['./customers-orders.component.css']
 })
-export class SuppliersOrdersComponent implements OnInit {
+export class CustomersOrdersComponent implements OnInit {
 
   isLoading = true;
   hasErrors = false;
@@ -21,19 +21,19 @@ export class SuppliersOrdersComponent implements OnInit {
 
   dateDiff(date1: any, date2: any): string {
     const val = Math.ceil((date1 - date2) / 1000 / 60 / 60 / 24);
-   if (val === 1) {
-     return Math.abs(val) + ' day left';
-   } else if (val === -1) {
-     return Math.abs(val) + ' day overdue';
-   } else if (val >= 0) {
-     return Math.abs(val) + ' days left';
-   } else {
-     return Math.abs(val) + ' days overdue';
-   }
+    if (val === 1) {
+      return Math.abs(val) + ' day left';
+    } else if (val === -1) {
+      return Math.abs(val) + ' day overdue';
+    } else if (val >= 0) {
+      return Math.abs(val) + ' days left';
+    } else {
+      return Math.abs(val) + ' days overdue';
+    }
   }
 
-  private getECF() {
-    this.primavera.getECF().subscribe((res) => {
+  private getECL() {
+    this.primavera.getECL().subscribe((res) => {
       this.orders = res;
       this.isLoading = false;
     }, (err) => {
@@ -45,7 +45,7 @@ export class SuppliersOrdersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getECF();
+    this.getECL();
   }
 
 }

@@ -16,8 +16,9 @@ import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { SuppliersOrdersComponent } from './suppliers-orders/suppliers-orders.component';
 import { OrderComponent } from './order/order.component';
-import { MatTableModule, MatCheckboxModule, MatExpansionModule, MatButtonModule } from '@angular/material';
+import { MatTableModule, MatCheckboxModule, MatExpansionModule, MatButtonModule, MatProgressSpinnerModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CustomersOrdersComponent } from './customers-orders/customers-orders.component';
 
 @NgModule({
     imports: [
@@ -29,6 +30,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         MatCheckboxModule,
         MatExpansionModule,
         MatButtonModule,
+        MatProgressSpinnerModule,
         routing
     ],
     declarations: [
@@ -38,7 +40,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         LoginComponent,
         RegisterComponent,
         SuppliersOrdersComponent,
-        OrderComponent
+        OrderComponent,
+        CustomersOrdersComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

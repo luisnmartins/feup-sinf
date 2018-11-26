@@ -1,10 +1,635 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
-import { TokenRes } from '@app/_models';
+import { TokenRes, Order } from '@app/_models';
 
+const CUST_ORDER_DATA: Order[] = [
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 24), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 25), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 26), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 20), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 30), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 20), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 20), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 20), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 20), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+  { supplier: 'SOFRIO', name: 'ECL', date: new Date(2018, 10, 20), content: [
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    },
+    {
+      name: 'example product',
+      reference: 123456789,
+      quantity: 10,
+      location: 'A1.1.10.14',
+      warehouse: 'A1',
+    }
+  ]},
+];
+
+const SUP_ORDER_DATA: Order[] = [
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 24), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 25), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 26), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 20), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 30), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 20), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 20), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 20), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 20), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+    {
+        supplier: 'SOFRIO', name: 'ECF', date: new Date(2018, 10, 20), content: [
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            },
+            {
+                name: 'example product',
+                reference: 123456789,
+                quantity: 10,
+                location: 'A1.1.10.14',
+                warehouse: 'A1',
+            }
+        ]
+    },
+];
 
 
 @Injectable({ providedIn: 'root' })
@@ -32,19 +657,23 @@ export class PrimaveraService {
         body.append('line', 'professional');
         this.http.post<TokenRes>(`${environment.primaveraUrl}/token`, body.toString(), {}).subscribe((res) => {
             console.log(res);
+            localStorage.setItem('currentToken', JSON.stringify(res));
+            this.currentTokenSubject.next(res);
         }, (err) => {
             console.log('error:', err);
         });
     }
 
-    async getECL() {
-        const req = new XMLHttpRequest();
-        req.open('GET', `${environment.primaveraUrl}/Administrador/Consulta`);
-        req.onload = (res) => {
-            console.log(res);
-        };
-        req.setRequestHeader('Authorization', 'Bearer 3A3ElXddIaQLG0YQMHlV63WOvRmlOYKpzo5euQQRlWenO1h9j3Pavx_tjIcgtt4QnBhSD2jo9VlNe_Hzg3oiGcMHuH4y_ZiVKwawu9SD1xJpduggUkv0hqEFyDdBoNg5yKE6TaiDjZTrYfF8ei_qgxKbk4gdhaSfqHmaeUx3EaEYbrdu2bLVkQ8fqPkVBIbZUUQTI2ccCqBKPHjclEM35ZF592Oh3YFZ0_2-nMBHZcZfUhLTsL_IqSPEwQzmeIjoSmj3-H1srfg_5I9bG2xLzs-l2Q659nhBTOS6snoYvwTVa-fxYP4V3IdGnxjKmHCu');
-        req.send('SELECT * FROM ArmazemLocalizacoes');
+    getECL(): Observable<Order[]> {
+        // const req = new XMLHttpRequest();
+        // req.open('GET', `${environment.primaveraUrl}/Administrador/Consulta`);
+        // req.onload = (res) => {
+        //     console.log(res);
+        // };
+        // req.setRequestHeader('Authorization', 'Bearer ' + this.currentTokenValue.access_token);
+        // req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // req.send('SELECT * FROM ArmazemLocalizacoes');
+
         // this.http.get(`${environment.primaveraUrl}/Administrador/Consulta`, {
         //     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         // }).subscribe((res) => {
@@ -52,13 +681,15 @@ export class PrimaveraService {
         // }, (err) => {
         //     console.log('error:', err);
         // });
+        return of(CUST_ORDER_DATA);
     }
 
-    async getECF() {
-        this.http.get(`${environment.primaveraUrl}/Administrador/Consulta`).subscribe((res) => {
-            console.log(res);
-        }, (err) => {
-            console.log('error:', err);
-        });
+    getECF(): Observable<Order[]> {
+        // this.http.get(`${environment.primaveraUrl}/Administrador/Consulta`).subscribe((res) => {
+        //     console.log(res);
+        // }, (err) => {
+        //     console.log('error:', err);
+        // });
+        return of(SUP_ORDER_DATA);
     }
 }
