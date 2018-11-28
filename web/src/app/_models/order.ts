@@ -1,6 +1,6 @@
 import { Product } from './product';
 export interface Order {
-    name: string;
+    type: string;
     supplier: string;
     date: Date;
     content: Product[];

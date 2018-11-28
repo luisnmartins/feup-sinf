@@ -3,7 +3,7 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <div *ngIf="orders && !orders.length && !isLoading">You have no unfulfilled suppliers' orders</div>
 <div *ngIf="hasErrors">Error getting suppliers' orders</div>
-<mat-expansion-panel *ngFor="let order of orders">
+<mat-expansion-panel *ngFor="let order of orders" class="panel">
   <mat-expansion-panel-header>
     <mat-panel-title>
       {{ order.name }}

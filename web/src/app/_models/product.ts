@@ -1,7 +1,8 @@
 export interface Product {
     name: string;
-    reference: number;
+    reference: string;
     quantity: number;
     warehouse: string;
+    stock: number;
     location?: string;
 }
