@@ -2,7 +2,7 @@
 <button mat-raised-button>Create Route</button>
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <div *ngIf="orders && !orders.length && !isLoading">You have no unfulfilled customers' orders</div>
-<div *ngIf="hasErrors">Error getting customer' orders</div>
+<div *ngIf="hasErrors">Error getting customers' orders</div>
 <mat-expansion-panel *ngFor="let order of orders">
   <mat-expansion-panel-header *ngIf="order">
     <mat-panel-title>

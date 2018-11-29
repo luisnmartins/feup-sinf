@@ -1,3 +1,4 @@
+import { PickingRouteComponent } from './picking-route/picking-route.component';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SuppliersOrdersComponent } from './suppliers-orders';
@@ -13,6 +14,7 @@ const appRoutes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'suppliersOrders', component: SuppliersOrdersComponent, canActivate: [AuthGuard] },
     { path: 'customersOrders', component: CustomersOrdersComponent, canActivate: [AuthGuard] },
+    { path: 'routing', component: PickingRouteComponent, canActivate: [AuthGuard] },
 
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

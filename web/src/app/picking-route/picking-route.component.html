@@ -1,0 +1,13 @@
+<h3>Picking Route</h3>
+<button mat-raised-button>Finish Route</button>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<div *ngIf="hasErrors">Error while calculating best route</div>
+<mat-list role="list">
+  <div *ngFor="let item of items">
+    <mat-list-item role="listitem">
+      Item {{ item.name }}
+    </mat-list-item>
+     <mat-divider></mat-divider>
+  </div>
+</mat-list>
+

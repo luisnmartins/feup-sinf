@@ -1,3 +1,4 @@
+import { Product } from './../_models/product';
 import { AdminConsult } from './../_models/responses';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -712,6 +713,40 @@ const SUP_ORDER_DATA: Order[] = [
     },
 ];
 
+const ROUTE_ITEMS: Product[] = [
+    {
+        name: 'example product',
+        reference: 'Item code',
+        quantity: 10,
+        location: 'A1.1.10.14',
+        warehouse: 'A1',
+        stock: 10,
+    },
+    {
+        name: 'example product',
+        reference: 'Item code',
+        quantity: 10,
+        location: 'A1.1.10.14',
+        warehouse: 'A1',
+        stock: 10,
+    },
+    {
+        name: 'example product',
+        reference: 'Item code',
+        quantity: 10,
+        location: 'A1.1.10.14',
+        warehouse: 'A1',
+        stock: 10,
+    },
+    {
+        name: 'example product',
+        reference: 'Item code',
+        quantity: 10,
+        location: 'A1.1.10.14',
+        warehouse: 'A1',
+        stock: 10,
+    }
+];
 
 @Injectable({ providedIn: 'root' })
 export class PrimaveraService {
@@ -767,6 +802,10 @@ export class PrimaveraService {
         , {
                 headers: { 'Content-Type': 'application/json' }
         });
+    }
+
+    createRoute(items: Product[]): Observable<Product[]> {
+        return of(ROUTE_ITEMS);
     }
 
     parseOrderLines(lines: OrderLine[]): Order[] {
