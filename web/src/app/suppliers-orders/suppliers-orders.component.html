@@ -4,9 +4,9 @@
 <div *ngIf="orders && !orders.length && !isLoading">You have no unfulfilled suppliers' orders</div>
 <div *ngIf="hasErrors">Error getting suppliers' orders</div>
 <mat-expansion-panel *ngFor="let order of orders" class="panel">
-  <mat-expansion-panel-header>
+  <mat-expansion-panel-header *ngIf="order">
     <mat-panel-title>
-      {{ order.name }}
+      {{ order.type }} - {{ order.supplier }}
     </mat-panel-title>
     <mat-panel-description>
       <!-- {{ order.date | date:'d MMM y'}} -->
@@ -14,6 +14,6 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   <!-- panel content bellow-->
-  <app-order [order]="order"></app-order>
+  <app-order *ngIf="order" [order]="order"></app-order>
 </mat-expansion-panel>
 

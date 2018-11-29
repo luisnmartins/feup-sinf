@@ -13,10 +13,8 @@ export class JwtInterceptor implements HttpInterceptor {
         private primaveraAuthService: PrimaveraService) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        console.log(request);
         if (request.url.includes(environment.primaveraUrl)) {
             // add authorization header for primavera web api if available
-            console.log('Sending to primavera');
             const currentToken = this.primaveraAuthService.currentTokenValue;
             if (currentToken && currentToken.access_token) {
                 request = request.clone({

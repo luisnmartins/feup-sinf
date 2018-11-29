@@ -1,3 +1,4 @@
+import { Product } from './../_models/product';
 import { AlertService } from '@app/_services';
 import { PrimaveraService } from './../_services/primavera.service';
 import { Component, OnInit } from '@angular/core';
@@ -34,12 +35,13 @@ export class CustomersOrdersComponent implements OnInit {
 
   private getECL() {
     this.primavera.getECL().subscribe((res) => {
-      this.orders = res;
+      this.orders = [];
+      this.orders = this.primavera.parseOrderLines(res.DataSet.Table);
       this.isLoading = false;
     }, (err) => {
       this.alertService.error(err);
       this.isLoading = false;
-      console.log('Error getting ECF', err);
+      console.log('Error getting ECL', err);
       this.hasErrors = true;
     });
   }

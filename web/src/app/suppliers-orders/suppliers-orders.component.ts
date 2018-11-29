@@ -34,7 +34,8 @@ export class SuppliersOrdersComponent implements OnInit {
 
   private getECF() {
     this.primavera.getECF().subscribe((res) => {
-      this.orders = res;
+      this.orders = [];
+      this.orders = this.primavera.parseOrderLines(res.DataSet.Table);
       this.isLoading = false;
     }, (err) => {
       this.alertService.error(err);
