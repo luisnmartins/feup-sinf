@@ -22,3 +22,7 @@ export interface OrderLine {
     location: string;
     stock: number;
 }
+
+export interface TransformedLine {
+    info: string;
+}

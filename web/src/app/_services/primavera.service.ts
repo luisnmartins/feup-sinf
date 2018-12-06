@@ -1,5 +1,5 @@
 import { Product } from './../_models/product';
-import { AdminConsult } from './../_models/responses';
+import { AdminConsult, TransformedLine } from './../_models/responses';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -804,8 +804,63 @@ export class PrimaveraService {
         });
     }
 
+    transformLines(lines: OrderLine[]): Promise<any>[] {
+        // URL- {{apiUrl}}Vendas/Docs/AdicionaLinhaTransformada/{TipoDocEnc}/{NumDocEnc}/{NumLinEnc}/{FilialEnc}/{strSerieEnc}
+        // Usage Example -
+        // {{apiUrl}}Vendas/Docs/AdicionaLinhaTransformada/ECL/12/1/000/A
+        // body: {
+        //  "Tipodoc": "GR",
+        //  "Serie": "A",
+        //  "Entidade": "C0001",
+        //  "TipoEntidade": "C",
+        //  "DataDoc": "11/29/2018",
+        //  "DataVenc": "11/29/2018"
+        // }
+        return [Promise.resolve()];
+    }
+
+    createDocument(lines: TransformedLine[]): Promise<any> {
+        // URL for ECL - {{apiUrl}}Vendas/Docs/CreateDocument
+        // URL for ECF - {{apiUrl}}Compras/Docs/CreateDocument
+        // body - tranformed line received from transfomr lines request
+        return Promise.resolve();
+    }
+
     createRoute(items: Product[]): Observable<Product[]> {
         return of(ROUTE_ITEMS);
+    }
+
+    createTransfer() {
+        // URL - {{apiUrl}}Inventario/Transferencias/CreateTransfer
+        // body:  {
+        //  "TipoDoc": "TRA",
+        //  "Serie": "A",
+        //  "Data": "29/11/2018",
+        //  "Moeda": "EUR",
+        //  "LinhasOrigem":
+        //  [
+        //      {
+        //          "Artigo": "A0001",
+        //          "Armazem": "A1",
+        //          "Localizacao": "A1",
+        //          "Lote": "",
+        //          "Quantidade": 5,
+        //          "PrecUnit": 1.5,
+        //          "INV_EstadoOrigem": "DISP",
+        //          "LinhasDestino":
+        //              [
+        //                  {
+        //                      "Artigo": "A0001", "Armazem": "Arececao",
+        //                      "Localizacao": "Arececao",
+        //                      "Lote": "",
+        //                      "Quantidade": 5,
+        //                      "PrecUnit": 1.5,
+        //                      "INV_EstadoDestino": "DISP"
+        //                  }
+        //              ]
+        //      }
+        //  ]
+        // }
     }
 
     parseOrderLines(lines: OrderLine[]): Order[] {
