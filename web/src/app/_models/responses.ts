@@ -12,9 +12,14 @@ export interface AdminConsult {
 }
 
 export interface OrderLine {
-    type: string;
+    series: string;
+    docName: string;
+    docType: string;
+    docNum: string;
     date: string;
-    supplier: string;
+    entity: string;
+    entityType: string;
+    lineNum: number;
     reference: string;
     name: string;
     quantity: number;

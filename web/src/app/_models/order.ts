@@ -1,6 +1,8 @@
 import { Product } from './product';
+
 export interface Order {
-    type: string;
+    docType: string;
+    docNum: string;
     supplier: string;
     date: Date;
     content: Product[];

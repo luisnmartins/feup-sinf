@@ -1,8 +1,9 @@
 <h3>Picking Route</h3>
 <button mat-raised-button>Finish Route</button>
-<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-progress-bar color="warn" *ngIf="isLoading" mode=determinate [value]="progress"></mat-progress-bar>
 <div *ngIf="hasErrors">Error while calculating best route</div>
-<mat-list role="list" [formGroup]="form">
+<div *ngIf="noRoute">You have no route calculated at the moment. Please go to an orders page to calculate one</div>
+<mat-list *ngIf="!isLoading" role="list" [formGroup]="form">
   <div *ngFor="let item of items; let i = index" formArrayName="items">
     <mat-list-item role="listitem">
       {{ item.name }}

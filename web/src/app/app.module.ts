@@ -22,6 +22,7 @@ import {
     MatExpansionModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatListModule,
     MatInputModule,
 } from '@angular/material';
@@ -42,6 +43,7 @@ import { PickingRouteComponent } from './picking-route/picking-route.component';
         MatProgressSpinnerModule,
         MatListModule,
         MatInputModule,
+        MatProgressBarModule,
         routing
     ],
     declarations: [

@@ -2,7 +2,7 @@ import { Product } from './../_models/product';
 import { Component, OnInit, Input } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
-import { Order } from '@app/_models';
+import { Order, OrderLine } from '@app/_models';
 
 @Component({
   selector: 'app-order',
@@ -14,8 +14,8 @@ export class OrderComponent implements OnInit {
   @Input() order: Order;
 
   displayedColumns: string[];
-  dataSource: MatTableDataSource<Product>;
-  selection: SelectionModel<Product>;
+  dataSource: MatTableDataSource<OrderLine>;
+  selection: SelectionModel<OrderLine>;
 
   constructor() { }
 
@@ -33,10 +33,14 @@ export class OrderComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
+  getSelected() {
+    return this.selection.selected;
+  }
+
   ngOnInit() {
     this.displayedColumns = ['select', 'name', 'quantity', 'location', 'warehouse'];
-    this.dataSource = new MatTableDataSource<Product>(this.order.content);
-    this.selection = new SelectionModel<Product>(true, []);
+    this.dataSource = new MatTableDataSource<OrderLine>(this.order.content.map((prod) => prod.origLine));
+    this.selection = new SelectionModel<OrderLine>(true, []);
   }
 
 }

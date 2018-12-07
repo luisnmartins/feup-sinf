@@ -1,7 +1,9 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Product } from './../_models/product';
 import { PrimaveraService, AlertService } from '@app/_services';
 import { Component, OnInit } from '@angular/core';
+import { OrderLine } from '@app/_models';
+import { isNumber } from 'util';
+import { takeLast } from 'rxjs/operators';
 
 @Component({
   selector: 'app-picking-route',
@@ -10,10 +12,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PickingRouteComponent implements OnInit {
 
-  items: Product[] = [];
+  items: OrderLine[] = [];
   form: FormGroup;
   isLoading = true;
+  noRoute = false;
   hasErrors = false;
+  progress = 0;
 
   constructor(
     private primavera: PrimaveraService,
@@ -25,7 +29,14 @@ export class PickingRouteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.primavera.createRoute([]).subscribe((res) => {
+    this.primavera.getRoute().subscribe(res => {
+      if (isNumber(res)) {
+        this.progress = res;
+        return;
+      }
+      if (res && res.length === 0) {
+        this.noRoute = true;
+      }
       const items = [];
       for (const item of res) {
         const control = this.fb.control('', Validators.required);

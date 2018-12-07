@@ -1,12 +1,12 @@
 <h3>Suppliers Orders</h3>
-<button mat-raised-button>Create Route</button>
+<button mat-raised-button (click)="createRoute()">Create Route</button>
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <div *ngIf="orders && !orders.length && !isLoading">You have no unfulfilled suppliers' orders</div>
 <div *ngIf="hasErrors">Error getting suppliers' orders</div>
 <mat-expansion-panel *ngFor="let order of orders" class="panel">
   <mat-expansion-panel-header *ngIf="order">
     <mat-panel-title>
-      {{ order.type }} - {{ order.supplier }}
+      {{ order.docType + '/' + order.docNum }} - {{ order.supplier }}
     </mat-panel-title>
     <mat-panel-description>
       <!-- {{ order.date | date:'d MMM y'}} -->

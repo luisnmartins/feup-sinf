@@ -1,3 +1,5 @@
+import { OrderLine } from './responses';
+
 export interface Product {
     name: string;
     reference: string;
@@ -5,4 +7,5 @@ export interface Product {
     warehouse: string;
     stock: number;
     location?: string;
+    origLine: OrderLine;
 }

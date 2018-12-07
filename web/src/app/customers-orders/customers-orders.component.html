@@ -6,7 +6,7 @@
 <mat-expansion-panel *ngFor="let order of orders">
   <mat-expansion-panel-header *ngIf="order">
     <mat-panel-title>
-      {{ order.type }} - {{ order.supplier }}
+      {{ order.docType + '/' + order.docNum }} - {{ order.supplier }}
     </mat-panel-title>
     <mat-panel-description>
       <!-- {{ order.date | date:'d MMM y'}} -->
