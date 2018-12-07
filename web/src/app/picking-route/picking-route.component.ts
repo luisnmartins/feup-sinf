@@ -1,16 +1,16 @@
+import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PrimaveraService, AlertService } from '@app/_services';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrderLine } from '@app/_models';
 import { isNumber } from 'util';
-import { takeLast } from 'rxjs/operators';
 
 @Component({
   selector: 'app-picking-route',
   templateUrl: './picking-route.component.html',
   styleUrls: ['./picking-route.component.css']
 })
-export class PickingRouteComponent implements OnInit {
+export class PickingRouteComponent implements OnInit, OnDestroy {
 
   items: OrderLine[] = [];
   form: FormGroup;
@@ -18,6 +18,7 @@ export class PickingRouteComponent implements OnInit {
   noRoute = false;
   hasErrors = false;
   progress = 0;
+  subscription: Subscription;
 
   constructor(
     private primavera: PrimaveraService,
@@ -29,7 +30,8 @@ export class PickingRouteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.primavera.getRoute().subscribe(res => {
+    this.subscription = this.primavera.getRoute().subscribe(res => {
+      console.log("here: ",res);
       if (isNumber(res)) {
         this.progress = res;
         return;
@@ -54,5 +56,9 @@ export class PickingRouteComponent implements OnInit {
       console.log('Error calculating optimal route:', error);
       this.hasErrors = true;
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
