@@ -1,9 +1,10 @@
 ﻿<!-- nav -->
 <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
     <div class="navbar-nav">
-        <a class="nav-item nav-link" routerLink="/">Home</a>
-        <a class="nav-item nav-link" routerLink="/suppliersOrders">Suppliers' Orders</a>
-        <a class="nav-item nav-link" routerLink="/customersOrders">Customers' Orders</a>
+        <a class="nav-item nav-link" routerLink="/" queryParamsHandling="merge">Home</a>
+        <a class="nav-item nav-link" routerLink="/suppliersOrders" queryParamsHandling="merge">Suppliers' Orders</a>
+        <a class="nav-item nav-link" routerLink="/customersOrders" queryParamsHandling="merge">Customers' Orders</a>
+        <a class="nav-item nav-link" routerLink="/routing" queryParamsHandling="merge">Routing</a>
         <a class="nav-item nav-link" (click)="logout()">Logout</a>
     </div>
 </nav>

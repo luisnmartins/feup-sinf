@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
 import { TokenRes, Order, OrderLine } from '@app/_models';
+import { formatDate } from '@angular/common';
 
 // const CUST_ORDER_DATA: Order[] = [
 //   { supplier: 'SOFRIO', type: 'ECL', date: new Date(2018, 10, 24), content: [
@@ -719,7 +720,7 @@ export class PrimaveraService {
     private currentTokenSubject: BehaviorSubject<TokenRes>;
     public currentToken: Observable<TokenRes>;
 
-    private currRoute = new BehaviorSubject<OrderLine[]|number>(0);
+    private currRoute = new BehaviorSubject<OrderLine[]|number>([]);
 
     constructor(private http: HttpClient) {
             this.currentTokenSubject = new BehaviorSubject<TokenRes>(JSON.parse(localStorage.getItem('currentToken')));
@@ -795,23 +796,32 @@ export class PrimaveraService {
         });
     }
 
-    transformLines(lines: OrderLine[], type: 'Vendas'|'Compras'): Promise<any>[] {
-        // const promisses = new Array<Promise<TransformedLine>>();
-        // lines.forEach(line => {
-        //     const body = new URLSearchParams();
-        //     body.append('Tipodoc', type === 'Vendas' ? 'GR' : 'FA');
-        //     body.append('Serie', line.series);
-        //     body.append('Entidade', line.entity);
-
-        //     promisses.push(<Promise<TransformedLine>>this.http.post(
-        //         `${environment.primaveraUrl}/
-        //         ${type}/
-        //         Docs/AdicionaLinhaTransformada/
-        //         ${line.docType}/
-        //         ${docNumber}/
-        //         ${lineNum}/
-        //         000/${docSeries}`, null).toPromise());
-        // });
+    transformLines(lines: OrderLine[], type: 'Vendas'|'Compras'): Promise<TransformedLine>[] {
+        console.log('LINES: ', lines);
+        console.log('TYPE: ', type);
+        const formattedDate = formatDate(new Date(), 'MM/dd/yyyy', 'en');
+        console.log('DATE: ', formattedDate);
+        const promisses = new Array<Promise<TransformedLine>>();
+        lines.forEach(line => {
+            const body = {
+                'TipoDoc': type === 'Compras' ? 'GR' : 'FA',
+                'Serie': line.series,
+                'Entidade': line.entity,
+                'TipoEntidade': line.entityType,
+                'DataDoc': formattedDate,
+                'DataVenc': formattedDate,
+            };
+            promisses.push(<Promise<TransformedLine>>this.http.post(`
+${environment.primaveraUrl}/${type}/
+Docs/AdicionaLinhaTransformada/
+${line.docType}/
+${line.docNum}/
+${line.lineNum}/
+000/${line.series}`,
+            body,
+            { headers: { 'Content-Type': 'application/json'}}).toPromise());
+        });
+        return promisses;
         // URL- {{apiUrl}}Vendas/Docs/AdicionaLinhaTransformada/{TipoDocEnc}/{NumDocEnc}/{NumLinEnc}/{FilialEnc}/{strSerieEnc}
         // Usage Example -
         // {{apiUrl}}Vendas/Docs/AdicionaLinhaTransformada/ECL/12/1/000/A
@@ -823,7 +833,6 @@ export class PrimaveraService {
         //  "DataDoc": "11/29/2018",
         //  "DataVenc": "11/29/2018"
         // }
-        return [Promise.resolve()];
     }
 
     createDocument(lines: TransformedLine[]): Promise<any> {

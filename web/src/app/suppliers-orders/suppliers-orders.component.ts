@@ -39,7 +39,7 @@ export class SuppliersOrdersComponent implements OnInit {
   }
 
   createRoute() {
-    this.router.navigate(['/routing']);
+    this.router.navigate(['/routing'], {  queryParams: {type: 'Compras'}});
     const selectedLines: OrderLine[] = [];
     this.orderCompns.forEach((order) => {
       selectedLines.push(...order.getSelected());

@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PrimaveraService, AlertService } from '@app/_services';
@@ -22,16 +23,27 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
 
   constructor(
     private primavera: PrimaveraService,
+    private route: ActivatedRoute,
     private alertService: AlertService,
     private fb: FormBuilder) { }
 
   showForm() {
     console.log(this.form.value);
+    for (let i = 0; i < this.items.length; i++) {
+      const item = this.items[i];
+      item.quantity = this.form.value[i];
+    }
+    const promisses = this.primavera.transformLines(this.items, this.route.snapshot.queryParams.type);
+    console.log('BEFORE PROMISE ALL');
+    Promise.all(promisses).then((result) => {
+      console.log('RESULT: ', result);
+    }).catch((error) => {
+      console.log('ERROR: ', error);
+    });
   }
 
   ngOnInit() {
     this.subscription = this.primavera.getRoute().subscribe(res => {
-      console.log("here: ",res);
       if (isNumber(res)) {
         this.progress = res;
         return;
