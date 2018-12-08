@@ -28,18 +28,21 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder) { }
 
   showForm() {
-    console.log(this.form.value);
     for (let i = 0; i < this.items.length; i++) {
       const item = this.items[i];
-      item.quantity = this.form.value[i];
+      item.quantity = this.form.value.items[i];
     }
-    const promisses = this.primavera.transformLines(this.items, this.route.snapshot.queryParams.type);
-    console.log('BEFORE PROMISE ALL');
-    Promise.all(promisses).then((result) => {
-      console.log('RESULT: ', result);
-    }).catch((error) => {
-      console.log('ERROR: ', error);
+    this.primavera.completeRoute(this.items, this.route.snapshot.queryParams.type).then(res => {
+      console.log('ON SHOW FORM: ', res);
+    }).catch(err => {
+      console.log('ON SHOW FORM(ERROR): ', err);
     });
+    // console.log('BEFORE PROMISE ALL');
+    // Promise.all(promisses).then((result) => {
+    //   console.log('RESULT: ', result);
+    // }).catch((error) => {
+    //   console.log('ERROR: ', error);
+    // });
   }
 
   ngOnInit() {
