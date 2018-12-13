@@ -1,7 +1,7 @@
 import { Product } from './../_models/product';
-import { AdminConsult, TransformedLine } from './../_models/responses';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { AdminConsult, WarehouseLocation } from './../_models/responses';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
@@ -13,18 +13,22 @@ export class PrimaveraService {
 
     private currentTokenSubject: BehaviorSubject<TokenRes>;
     public currentToken: Observable<TokenRes>;
-    public interval: NodeJS.Timer;
+    public locations: WarehouseLocation[] = [];
+    public interval;
 
     private currRoute = new BehaviorSubject<OrderLine[]|number>([]);
 
     constructor(private http: HttpClient) {
             this.currentTokenSubject = new BehaviorSubject<TokenRes>(JSON.parse(localStorage.getItem('currentToken')));
             this.currentToken = this.currentTokenSubject.asObservable();
-            this.interval = setInterval(this.getToken, 1100000);
     }
 
     public get currentTokenValue(): TokenRes {
         return this.currentTokenSubject.value;
+    }
+
+    startInterval() {
+        this.interval = setInterval(this.getToken.bind(this), 110000);
     }
 
     stopInterval() {
@@ -32,6 +36,7 @@ export class PrimaveraService {
     }
 
     async getToken() {
+        console.log('REQUESTING TOKEN');
         const body = new URLSearchParams();
         body.append('username', 'FEUP'),
         body.append('password', 'qualquer1');
@@ -46,6 +51,7 @@ export class PrimaveraService {
         }, (err) => {
             console.log('error:', err);
         });
+
     }
 
     getECL(): Observable<AdminConsult> {
@@ -96,6 +102,28 @@ export class PrimaveraService {
         });
     }
 
+    async getLocations(): Promise<WarehouseLocation[]> {
+        try {
+            const response = await <any>(this.http.post(`${environment.primaveraUrl}/Administrador/Consulta`,
+                `"Select Armazem, Localizacao, Descricao from ArmazemLocalizacoes"`
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                }).toPromise());
+            const locations = response.DataSet.Table;
+            locations.forEach(location => {
+                this.locations.push({
+                    warehouse: location.Armazem,
+                    location: location.Localizacao,
+                    description: location.Descricao,
+                });
+            });
+            console.log(this.locations);
+        } catch (error) {
+            console.error(error);
+            return Promise.reject(error);
+        }
+    }
+
     async completeRoute(lines: OrderLine[], type: 'Vendas' | 'Compras') {
         console.log('LINES: ', lines);
         console.log('TYPE: ', type);
@@ -141,7 +169,8 @@ Docs/AdicionaLinhaTransformada/
 ${line.docType}/
 ${line.docNum}/
 ${line.lineNum}/
-000/${line.series}`,
+000/${line.series}/
+${line.quantity}`,
                 body,
                 { headers: { 'Content-Type': 'application/json' } }).toPromise());
         }
@@ -155,7 +184,7 @@ ${line.lineNum}/
         return Promise.resolve();
     }
 
-    async createTransferToExpedition(lines: OrderLine[]) {
+    async createTransferFromReception(lines: OrderLine[]) {
         const origLines = [];
         lines.forEach(line => {
             origLines.push({
@@ -183,7 +212,7 @@ ${line.lineNum}/
         return this.createTransfer([]);
     }
 
-    async createTransferFromReception(lines: OrderLine[]) {
+    async createTransferToExpedition(lines: OrderLine[]) {
         const origLines = [];
         lines.forEach(line => {
             origLines.push({
@@ -199,7 +228,7 @@ ${line.lineNum}/
                     {
                         Artigo: line.reference,
                         Armazem: 'A1',
-                        Localizacao: 'A1.expedição',
+                        Localizacao: 'A1.rececao',
                         Lote: '',
                         Quantidade: line.quantity,
                         PrecUnit: 1.5,
@@ -234,7 +263,7 @@ ${line.lineNum}/
         this.currRoute.next(0);
     }
 
-    getRoute(): Observable<OrderLine[]|number> {
+    getRoute(): Observable<any> {
         return this.currRoute.asObservable();
     }
 

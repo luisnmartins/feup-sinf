@@ -31,3 +31,9 @@ export interface OrderLine {
 export interface TransformedLine {
     info: string;
 }
+
+export interface WarehouseLocation {
+    warehouse: string;
+    location: string;
+    description: string;
+}
