@@ -1,7 +1,8 @@
+import { OrderComponent } from '@app/order/order.component';
 import { Router } from '@angular/router';
 import { AlertService } from '@app/_services';
 import { PrimaveraService } from './../_services/primavera.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { Order, OrderLine } from '@app/_models';
 
 @Component({
@@ -10,6 +11,8 @@ import { Order, OrderLine } from '@app/_models';
   styleUrls: ['./customers-orders.component.css']
 })
 export class CustomersOrdersComponent implements OnInit {
+
+  @ViewChildren(OrderComponent) orderCompns !: QueryList<OrderComponent>;
 
   isLoading = true;
   hasErrors = false;
@@ -37,6 +40,9 @@ export class CustomersOrdersComponent implements OnInit {
   createRoute() {
     this.router.navigate(['/routing'], { queryParams: { type: 'Vendas' } });
     const selectedLines: OrderLine[] = [];
+    this.orderCompns.forEach((order) => {
+      selectedLines.push(...order.getSelected());
+    });
     this.primavera.createRoute(selectedLines);
   }
 

@@ -71,8 +71,10 @@ export class PrimaveraService {
             ISNULL(Art.StkActual, 0) as stock
             FROM CabecDoc as Cab
                 join LinhasDoc as Lin on Cab.Id = Lin.IdCabecDoc
-                join Artigo as Art on Lin.Artigo = Art.Artigo
-            WHERE Cab.TipoDoc = 'ECL'"`
+                join Artigo as Art ON Lin.Artigo = Art.Artigo
+                join CabecDocStatus as CabStat ON Cab.Id = CabStat.IdCabecDoc
+            WHERE Cab.TipoDoc = 'ECL'
+            AND CabStat.estado != 'T'"`
         , {
             headers: { 'Content-Type': 'application/json' }
         });
@@ -96,7 +98,9 @@ export class PrimaveraService {
             FROM CabecCompras as Cab
                 join LinhasCompras as Lin on Cab.Id = Lin.IdCabecCompras
                 join Artigo as Art on Lin.Artigo = Art.Artigo
-            WHERE Cab.TipoDoc='ECF'"`
+                join CabecComprasStatus as CabStat ON Cab.id = CabStat.IdCabecCompras
+            WHERE Cab.TipoDoc='ECF'
+            AND CabStat.estado != 'T'"`
         , {
                 headers: { 'Content-Type': 'application/json' }
         });
@@ -132,13 +136,18 @@ export class PrimaveraService {
         try {
             const responses = await this.transformLines(lines, type, formattedDate);
             console.log('TRANSFORM LINES: ', responses);
-            // TODO: Create new document
+            const documents = this.concatTransfLines(responses);
+            console.log('NEW DOCUMENTS: ', documents);
             let transferRes;
             switch (type) {
                 case 'Compras':
+                    const completeDocs = await this.fillRelatedData(documents);
+                    console.log('COMPLETE DOCS: ', completeDocs);
+                    await this.createPurchaseDocument(completeDocs);
                     transferRes = await this.createTransferFromReception(lines);
                     break;
                 case 'Vendas':
+                    await this.createSalesDocument(documents);
                     transferRes = await this.createTransferToExpedition(lines);
                     break;
                 default:
@@ -146,7 +155,7 @@ export class PrimaveraService {
             }
             console.log('CREATE TRANSFER: ', transferRes);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return Promise.reject(error);
         }
     }
@@ -156,7 +165,7 @@ export class PrimaveraService {
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
             const body = {
-                TipoDoc: type === 'Compras' ? 'GR' : 'FA',
+                TipoDoc: type === 'Compras' ? 'FA' : 'GR',
                 Serie: line.series,
                 Entidade: line.entity,
                 TipoEntidade: line.entityType,
@@ -177,11 +186,56 @@ ${line.quantity}`,
         return responses;
     }
 
-    createDocument(lines: any[]): Promise<any> {
+    concatTransfLines(transfLines: any[]): any[] {
+        const completeDocuments: any[] = [];
+        transfLines.forEach((line) => {
+            if (completeDocuments[line.Entidade]) {
+                console.log('PUSHING: ', line.Linhas);
+                completeDocuments[line.Entidade].Linhas.push(...line.Linhas);
+            } else {
+                console.log('NEW DOC');
+                completeDocuments[line.Entidade] = line;
+            }
+        });
+        return completeDocuments;
+    }
+
+    async createSalesDocument(documents): Promise<any[]> {
         // URL for ECL - {{apiUrl}}Vendas/Docs/CreateDocument
+        const responses: any[] = [];
+        for (let i = 0; i < documents.length; i++) {
+            const doc = documents[i];
+            responses.push(await this.http.post(`${environment.primaveraUrl}/Vendas/Docs/Actualiza`,
+                doc,
+                { headers: { 'Content-Type': 'application/json' } }).toPromise());
+        }
+        return responses;
+    }
+
+    async fillRelatedData(documents): Promise<any[]> {
+        const responses: any[] = [];
+        const keys = Object.keys(documents);
+        for (let i = 0; i < keys.length; i++) {
+            const doc = documents[keys[i]];
+            responses.push(await this.http.post(`${environment.primaveraUrl}/Compras/Docs/PreencheDadosRelacionados/`,
+                doc,
+                { headers: { 'Content-Type': 'application/json' } }).toPromise());
+        }
+        return responses;
+    }
+
+    createPurchaseDocument(documents: object) {
         // URL for ECF - {{apiUrl}}Compras/Docs/CreateDocument
-        // body - tranformed line received from transfomr lines request
-        return Promise.resolve();
+        const promisses: Promise<any>[] = [];
+        for (const key in documents) {
+            if (documents.hasOwnProperty(key)) {
+                const doc = documents[key];
+                promisses.push(this.http.post(`${environment.primaveraUrl}/Compras/Docs/CreateDocument`,
+                    doc,
+                    { headers: { 'Content-Type': 'application/json' } }).toPromise());
+            }
+        }
+        return promisses;
     }
 
     async createTransferFromReception(lines: OrderLine[]) {
@@ -209,7 +263,7 @@ ${line.quantity}`,
                     ]
             });
         });
-        return this.createTransfer([]);
+        return this.createTransfer(origLines);
     }
 
     async createTransferToExpedition(lines: OrderLine[]) {
@@ -248,6 +302,7 @@ ${line.quantity}`,
             Moeda: 'EUR',
             LinhasOrigem: origLines
         };
+        console.log(body);
         return this.http.post(
             `${environment.primaveraUrl}/Inventario/Transferencias/CreateTransfer`,
             body,
