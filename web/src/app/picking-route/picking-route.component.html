@@ -7,6 +7,7 @@
   <div *ngFor="let item of items; let i = index" formArrayName="items">
     <mat-list-item role="listitem">
       {{ item.name }}
+      Location: {{ item.location }}
       Quantity: {{ item.quantity }}
       <mat-form-field class="">
         <input matInput type="number" placeholder="Picked" [formControlName]="i" name="picked" value="{{item.quantity}}" min="0" max={{item.quantity}}>

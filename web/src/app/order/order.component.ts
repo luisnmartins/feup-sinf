@@ -39,7 +39,8 @@ export class OrderComponent implements OnInit {
 
   ngOnInit() {
     this.displayedColumns = ['select', 'name', 'quantity', 'location', 'warehouse'];
-    this.dataSource = new MatTableDataSource<OrderLine>(this.order.content.map((prod) => prod.origLine));
+    this.dataSource = new MatTableDataSource<OrderLine>(
+      this.order.content.filter((prod) => prod.quantity > 0).map((prod) => prod.origLine));
     this.selection = new SelectionModel<OrderLine>(true, []);
   }
 

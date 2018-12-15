@@ -1,12 +1,13 @@
 import { Product } from './../_models/product';
 import { AdminConsult, WarehouseLocation } from './../_models/responses';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '@environments/environment';
 import { TokenRes, Order, OrderLine } from '@app/_models';
 import { formatDate } from '@angular/common';
+import { RouteService } from './route.service';
 
 @Injectable({ providedIn: 'root' })
 export class PrimaveraService {
@@ -16,9 +17,10 @@ export class PrimaveraService {
     public locations: WarehouseLocation[] = [];
     public interval;
 
-    private currRoute = new BehaviorSubject<OrderLine[]|number>([]);
+    private currRoute = new BehaviorSubject<any>([]);
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+        private route: RouteService) {
             this.currentTokenSubject = new BehaviorSubject<TokenRes>(JSON.parse(localStorage.getItem('currentToken')));
             this.currentToken = this.currentTokenSubject.asObservable();
     }
@@ -329,7 +331,7 @@ ${line.quantity}`,
 
     createRoute(items: OrderLine[]) {
         // TODO - insert algorithm here
-        this.currRoute.next(items);
+        this.currRoute.next(this.route.runAlgorithm(this.currRoute, items));
     }
 
     clearRoute() {

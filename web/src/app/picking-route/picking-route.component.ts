@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PrimaveraService, AlertService } from '@app/_services';
@@ -24,6 +24,7 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
   constructor(
     private primavera: PrimaveraService,
     private route: ActivatedRoute,
+    private router: Router,
     private alertService: AlertService,
     private fb: FormBuilder) { }
 
@@ -34,15 +35,10 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
     }
     this.primavera.completeRoute(this.items, this.route.snapshot.queryParams.type).then(res => {
       console.log('ON SHOW FORM: ', res);
+      this.router.navigate(['/home']);
     }).catch(err => {
       console.log('ON SHOW FORM(ERROR): ', err);
     });
-    // console.log('BEFORE PROMISE ALL');
-    // Promise.all(promisses).then((result) => {
-    //   console.log('RESULT: ', result);
-    // }).catch((error) => {
-    //   console.log('ERROR: ', error);
-    // });
   }
 
   ngOnInit() {
