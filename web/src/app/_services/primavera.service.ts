@@ -40,7 +40,7 @@ export class PrimaveraService {
         const body = new URLSearchParams();
         body.append('username', 'FEUP'),
         body.append('password', 'qualquer1');
-        body.append('company', 'DEMO');
+        body.append('company', 'TECHARENA');
         body.append('instance', 'DEFAULT');
         body.append('grant_type', 'password');
         body.append('line', 'professional');
@@ -64,7 +64,7 @@ export class PrimaveraService {
             Cab.Entidade as entity,
             Lin.NumLinha as lineNum,
             Lin.Artigo as reference,
-            Lin.Quantidade as quantity,
+            (Lin.Quantidade - LinStat.QuantTrans) as quantity,
             Lin.Armazem as warehouse,
             Lin.Localizacao as location,
             Art.Descricao as name,
@@ -73,8 +73,9 @@ export class PrimaveraService {
                 join LinhasDoc as Lin on Cab.Id = Lin.IdCabecDoc
                 join Artigo as Art ON Lin.Artigo = Art.Artigo
                 join CabecDocStatus as CabStat ON Cab.Id = CabStat.IdCabecDoc
+                join linhasdocstatus as LinStat ON LinStat.idlinhasdoc = Lin.id
             WHERE Cab.TipoDoc = 'ECL'
-            AND CabStat.estado != 'T'"`
+            AND CabStat.estado = 'P'"`
         , {
             headers: { 'Content-Type': 'application/json' }
         });
@@ -90,7 +91,7 @@ export class PrimaveraService {
             Cab.Entidade as entity,
             Lin.NumLinha as lineNum,
             Lin.Artigo as reference,
-            Lin.Quantidade as quantity,
+            (Lin.Quantidade - LinStat.QuantTrans) as quantity,
             Lin.Armazem as warehouse,
             Lin.Localizacao as location,
             Art.Descricao as name,
@@ -99,8 +100,9 @@ export class PrimaveraService {
                 join LinhasCompras as Lin on Cab.Id = Lin.IdCabecCompras
                 join Artigo as Art on Lin.Artigo = Art.Artigo
                 join CabecComprasStatus as CabStat ON Cab.id = CabStat.IdCabecCompras
+                join linhascomprasstatus as LinStat ON LinStat.idlinhascompras = Lin.id
             WHERE Cab.TipoDoc='ECF'
-            AND CabStat.estado != 'T'"`
+            AND CabStat.estado = 'P'"`
         , {
                 headers: { 'Content-Type': 'application/json' }
         });
@@ -141,14 +143,15 @@ export class PrimaveraService {
             let transferRes;
             switch (type) {
                 case 'Compras':
+                    this.setReceptionLocation(documents);
                     const completeDocs = await this.fillRelatedData(documents);
                     console.log('COMPLETE DOCS: ', completeDocs);
                     await this.createPurchaseDocument(completeDocs);
                     transferRes = await this.createTransferFromReception(lines);
                     break;
                 case 'Vendas':
-                    await this.createSalesDocument(documents);
-                    transferRes = await this.createTransferToExpedition(lines);
+                    console.log('CREATE DOCUMENT: ', await this.createSalesDocument(documents));
+                    // transferRes = await this.createTransferToExpedition(lines);
                     break;
                 default:
                     return Promise.reject(new Error('Unknown Route type detected. Route type should be on of {Vendas,Compras}'));
@@ -165,7 +168,7 @@ export class PrimaveraService {
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
             const body = {
-                TipoDoc: type === 'Compras' ? 'FA' : 'GR',
+                TipoDoc: type === 'Compras' ? 'VGR' : 'GR',
                 Serie: line.series,
                 Entidade: line.entity,
                 TipoEntidade: line.entityType,
@@ -203,11 +206,13 @@ ${line.quantity}`,
     async createSalesDocument(documents): Promise<any[]> {
         // URL for ECL - {{apiUrl}}Vendas/Docs/CreateDocument
         const responses: any[] = [];
-        for (let i = 0; i < documents.length; i++) {
-            const doc = documents[i];
-            responses.push(await this.http.post(`${environment.primaveraUrl}/Vendas/Docs/Actualiza`,
-                doc,
-                { headers: { 'Content-Type': 'application/json' } }).toPromise());
+        for (const key in documents) {
+            if (documents.hasOwnProperty(key)) {
+                const doc = documents[key];
+                responses.push(await this.http.post(`${environment.primaveraUrl}/Vendas/Docs/CreateDocument`,
+                    doc,
+                    { headers: { 'Content-Type': 'application/json' } }).toPromise());
+            }
         }
         return responses;
     }
@@ -224,18 +229,31 @@ ${line.quantity}`,
         return responses;
     }
 
-    createPurchaseDocument(documents: object) {
-        // URL for ECF - {{apiUrl}}Compras/Docs/CreateDocument
-        const promisses: Promise<any>[] = [];
+    setReceptionLocation(documents) {
         for (const key in documents) {
             if (documents.hasOwnProperty(key)) {
                 const doc = documents[key];
-                promisses.push(this.http.post(`${environment.primaveraUrl}/Compras/Docs/CreateDocument`,
+                doc.NumDocExterno = 1;
+                for (const line of doc.Linhas) {
+                    line.Armazem = 'RECEP';
+                    line.Localizacao = 'RECEP';
+                }
+            }
+        }
+    }
+
+    async createPurchaseDocument(documents: object): Promise<any[]> {
+        // URL for ECF - {{apiUrl}}Compras/Docs/CreateDocument
+        const responses: any[] = [];
+        for (const key in documents) {
+            if (documents.hasOwnProperty(key)) {
+                const doc = documents[key];
+                responses.push(await this.http.post(`${environment.primaveraUrl}/Compras/Docs/Actualiza`,
                     doc,
                     { headers: { 'Content-Type': 'application/json' } }).toPromise());
             }
         }
-        return promisses;
+        return responses;
     }
 
     async createTransferFromReception(lines: OrderLine[]) {
@@ -243,8 +261,8 @@ ${line.quantity}`,
         lines.forEach(line => {
             origLines.push({
                 Artigo: line.reference,
-                Armazem: 'A1',
-                Localizacao: 'A1.rececao',
+                Armazem: 'RECEP',
+                Localizacao: '',
                 Lote: '',
                 Quantidade: line.quantity,
                 PrecUnit: 1.5,
