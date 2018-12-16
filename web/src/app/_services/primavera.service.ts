@@ -1,3 +1,4 @@
+import { AuthenticationService } from './authentication.service';
 import { Product } from './../_models/product';
 import { AdminConsult, WarehouseLocation } from './../_models/responses';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -14,13 +15,16 @@ export class PrimaveraService {
 
     private currentTokenSubject: BehaviorSubject<TokenRes>;
     public currentToken: Observable<TokenRes>;
+    private currUser: any;
     public locations: WarehouseLocation[] = [];
     public interval;
 
     private currRoute = new BehaviorSubject<any>([]);
 
     constructor(private http: HttpClient,
-        private route: RouteService) {
+        private route: RouteService,
+        private authenticationService: AuthenticationService,
+        ) {
             this.currentTokenSubject = new BehaviorSubject<TokenRes>(JSON.parse(localStorage.getItem('currentToken')));
             this.currentToken = this.currentTokenSubject.asObservable();
     }
@@ -38,11 +42,13 @@ export class PrimaveraService {
     }
 
     async getToken() {
+        const currUser = this.authenticationService.currentUserValue;
         console.log('REQUESTING TOKEN');
         const body = new URLSearchParams();
         body.append('username', 'FEUP'),
         body.append('password', 'qualquer1');
-        body.append('company', 'TECHARENA');
+        console.log('COMPANY: ', currUser.company);
+        body.append('company', currUser.company);
         body.append('instance', 'DEFAULT');
         body.append('grant_type', 'password');
         body.append('line', 'professional');
