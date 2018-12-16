@@ -1,13 +1,21 @@
-﻿<h1>Hi {{currentUser.firstName}}!</h1>
-<p>You're logged in with Angular 7!!</p>
-<h3>All registered users:</h3>
-<ul>
-    <li *ngFor="let user of users">
-        {{user.username}} ({{user.firstName}} {{user.lastName}})
-        - <a (click)="deleteUser(user.id)" class="text-danger">Delete</a>
-    </li>
-</ul>
+﻿<div>
+<h1>Hi {{currentUser.firstName}}!</h1>
+<p>Welcome back to Storinator!</p>
 
-<button (click)="primavera.getToken()">Get token</button>
-<button (click)="primavera.getECL()">Get ECL</button>
-<button (click)="primavera.getLocations()">Get Locations</button>
+</div>
+<div class="statistics"> 
+    <div class="stats_row">
+        <div class="stats_element" routerLink="/customersOrders" queryParamsHandling="merge">
+            <span class="main_number">{{ecl.length}}</span>
+            <p class="main_text">Client orders to receive</p>
+        </div>
+    </div>
+    <div class="stats_row">
+            <div class="stats_element" routerLink="/suppliersOrders" queryParamsHandling="merge">
+                <span class="main_number">{{ecf.length}}</span>
+                <p class="main_text">Suplier orders to receive</p>
+            </div>
+        </div>
+</div>
+
+<a (click)="primavera.getToken()" id="get_token">Data is not being loaded? Please click here</a>
