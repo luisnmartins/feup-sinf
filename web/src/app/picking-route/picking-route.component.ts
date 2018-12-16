@@ -20,6 +20,7 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
   hasErrors = false;
   progress = 0;
   subscription: Subscription;
+  waitingResponse = false;
 
   constructor(
     private primavera: PrimaveraService,
@@ -33,10 +34,14 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
       const item = this.items[i];
       item.quantity = this.form.value.items[i];
     }
+    this.waitingResponse = true;
     this.primavera.completeRoute(this.items, this.route.snapshot.queryParams.type).then(res => {
       console.log('ON SHOW FORM: ', res);
+      this.waitingResponse = false;
       this.router.navigate(['/home']);
     }).catch(err => {
+      this.alertService.error(err);
+      this.waitingResponse = false;
       console.log('ON SHOW FORM(ERROR): ', err);
     });
   }

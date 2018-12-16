@@ -24,6 +24,8 @@ import {
     MatProgressBarModule,
     MatListModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomersOrdersComponent } from './customers-orders/customers-orders.component';
@@ -43,6 +45,8 @@ import { PickingRouteComponent } from './picking-route/picking-route.component';
         MatListModule,
         MatInputModule,
         MatProgressBarModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
         routing
     ],
     declarations: [

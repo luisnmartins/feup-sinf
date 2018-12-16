@@ -5,5 +5,7 @@ export interface Order {
     docNum: string;
     supplier: string;
     date: Date;
+    entName: string;
     content: Product[];
+    contentString: string;
 }

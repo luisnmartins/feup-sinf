@@ -103,12 +103,14 @@ export class PrimaveraService {
             Lin.Armazem as warehouse,
             Lin.Localizacao as location,
             Art.Descricao as name,
+            Ent.nome as entName,
             ISNULL(Art.StkActual, 0) as stock
             FROM CabecCompras as Cab
                 join LinhasCompras as Lin on Cab.Id = Lin.IdCabecCompras
                 join Artigo as Art on Lin.Artigo = Art.Artigo
                 join CabecComprasStatus as CabStat ON Cab.id = CabStat.IdCabecCompras
                 join linhascomprasstatus as LinStat ON LinStat.idlinhascompras = Lin.id
+                join fornecedores as Ent ON Ent.fornecedor = Cab.Entidade
             WHERE Cab.TipoDoc='ECF'
             AND CabStat.estado = 'P'"`
         , {
@@ -366,6 +368,7 @@ ${line.quantity}`,
                 orders[number] = <Order>{
                     docType: line.docType,
                     docNum: line.docNum,
+                    entName: line.entName,
                     supplier: line.entity,
                     date: new Date(line.date),
                     content: [<Product>{
@@ -381,5 +384,15 @@ ${line.quantity}`,
             }
         });
         return orders;
+    }
+
+    addContentString(order: Order) {
+        const content = [];
+        content.push(order.supplier);
+        content.push(order.entName);
+        order.content.forEach((product: Product) => {
+            content.push(product.location, product.name, product.reference, product.warehouse);
+        });
+        order.contentString = content.join(';').toLowerCase();
     }
 }
