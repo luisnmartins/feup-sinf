@@ -1,3 +1,8 @@
-mat-list-item {
-    background-color: #424242;
+h3 {
+    display: inline-block;
 }
+
+button {
+    float: right;
+}
+

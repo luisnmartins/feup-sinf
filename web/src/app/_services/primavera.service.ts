@@ -34,7 +34,7 @@ export class PrimaveraService {
     }
 
     startInterval() {
-        this.interval = setInterval(this.getToken.bind(this), 110000);
+        this.interval = setInterval(this.getToken.bind(this), 1100000);
     }
 
     stopInterval() {
@@ -76,12 +76,14 @@ export class PrimaveraService {
             Lin.Armazem as warehouse,
             Lin.Localizacao as location,
             Art.Descricao as name,
+            Ent.nome as entName,
             ISNULL(Art.StkActual, 0) as stock
             FROM CabecDoc as Cab
                 join LinhasDoc as Lin on Cab.Id = Lin.IdCabecDoc
                 join Artigo as Art ON Lin.Artigo = Art.Artigo
                 join CabecDocStatus as CabStat ON Cab.Id = CabStat.IdCabecDoc
                 join linhasdocstatus as LinStat ON LinStat.idlinhasdoc = Lin.id
+                join clientes as Ent ON Ent.cliente = Cab.Entidade
             WHERE Cab.TipoDoc = 'ECL'
             AND CabStat.estado = 'P'"`
         , {
@@ -219,7 +221,7 @@ ${line.quantity}`,
         for (const key in documents) {
             if (documents.hasOwnProperty(key)) {
                 const doc = documents[key];
-                responses.push(await this.http.post(`${environment.primaveraUrl}/Vendas/Docs/CreateDocument`,
+                responses.push(await this.http.post(`${environment.primaveraUrl}/Vendas/Docs/Actualiza`,
                     doc,
                     { headers: { 'Content-Type': 'application/json' } }).toPromise());
             }

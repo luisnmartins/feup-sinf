@@ -4,17 +4,17 @@
 <div *ngIf="orders && !orders.length && !isLoading">You have no unfulfilled customers' orders</div>
 <div *ngIf="hasErrors">Error getting customers' orders</div>
 <hr>
-<form [formGroup]="form" id="form">
+<form [formGroup]="form" *ngIf="!hasError && !isLoading && orders && orders.length" id="form">
   <div>
-    <mat-form-field class="dateInput">
-      <input matInput [matDatepicker]="pickerStart" formControlName="pickerStart" placeholder="Choose a date">
+    <mat-form-field color="accent" class="dateInput">
+      <input matInput [matDatepicker]="pickerStart" formControlName="pickerStart" placeholder="From">
       <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
       <mat-datepicker #pickerStart></mat-datepicker>
     </mat-form-field>
   </div>
   <div>
-    <mat-form-field class="dateInput">
-      <input matInput [matDatepicker]="pickerEnd" formControlName="pickerEnd" placeholder="Choose a date">
+    <mat-form-field color="accent" class="dateInput">
+      <input matInput [matDatepicker]="pickerEnd" formControlName="pickerEnd" placeholder="To">
       <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
       <mat-datepicker #pickerEnd></mat-datepicker>
     </mat-form-field>
@@ -25,7 +25,7 @@
   </mat-form-field>
 </form>
 <div *ngIf="filteredOrders && !filteredOrders.length && !isLoading">No orders match the current search</div>
-<mat-expansion-panel *ngFor="let order of orders">
+<mat-expansion-panel *ngFor="let order of filteredOrders">
   <mat-expansion-panel-header *ngIf="order">
     <mat-panel-title>
       {{ order.docType + '/' + order.docNum }} - {{ order.supplier }}
