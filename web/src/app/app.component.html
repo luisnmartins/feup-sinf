@@ -1,11 +1,17 @@
 ﻿<!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-    <div class="navbar-nav">
-        <a class="nav-item nav-link" routerLink="/" queryParamsHandling="merge">Home</a>
-        <a class="nav-item nav-link" routerLink="/suppliersOrders" queryParamsHandling="merge">Suppliers' Orders</a>
-        <a class="nav-item nav-link" routerLink="/customersOrders" queryParamsHandling="merge">Customers' Orders</a>
-        <a class="nav-item nav-link" routerLink="/routing" queryParamsHandling="merge">Routing</a>
-        <a class="nav-item nav-link" (click)="logout()">Logout</a>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark" *ngIf="currentUser">
+    <button class="navbar-toggler" (click)="expand($event)" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo03"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div (click)="collapse($event)" class="collapse navbar-collapse" id="navbarToggler">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" routerLink="/" queryParamsHandling="merge">Home</a>
+            <a class="nav-item nav-link" routerLink="/suppliersOrders" queryParamsHandling="merge">Suppliers' Orders</a>
+            <a class="nav-item nav-link" routerLink="/customersOrders" queryParamsHandling="merge">Customers' Orders</a>
+            <a class="nav-item nav-link" routerLink="/routing" queryParamsHandling="merge">Routing</a>
+            <a class="nav-item nav-link" (click)="logout()">Logout</a>
+        </div>
     </div>
 </nav>
 

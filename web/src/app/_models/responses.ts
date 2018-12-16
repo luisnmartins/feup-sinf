@@ -16,6 +16,7 @@ export interface OrderLine {
     docName: string;
     docType: string;
     docNum: string;
+    entName: string;
     date: string;
     entity: string;
     entityType: string;

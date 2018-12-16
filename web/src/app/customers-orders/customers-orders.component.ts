@@ -1,3 +1,4 @@
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { OrderComponent } from '@app/order/order.component';
 import { Router } from '@angular/router';
 import { AlertService } from '@app/_services';
@@ -17,12 +18,15 @@ export class CustomersOrdersComponent implements OnInit {
   isLoading = true;
   hasErrors = false;
   orders: Order[];
+  filteredOrders: Order[];
   today: number = Date.now();
+  form: FormGroup;
 
   constructor(
     private primavera: PrimaveraService,
     private router: Router,
-    private alertService: AlertService) { }
+    private alertService: AlertService,
+    private fb: FormBuilder) { }
 
   dateDiff(date1: any, date2: any): string {
     const val = Math.ceil((date1 - date2) / 1000 / 60 / 60 / 24);
@@ -46,10 +50,28 @@ export class CustomersOrdersComponent implements OnInit {
     this.primavera.createRoute(selectedLines);
   }
 
+  canCreateRoute() {
+    const selectedLines: OrderLine[] = [];
+    this.orderCompns.forEach((order) => {
+      selectedLines.push(...order.getSelected());
+    });
+    return selectedLines.length !== 0;
+  }
+
+  private filterOrders(search: string, dateStart: Date, dateEnd: Date) {
+    return this.orders.filter((order) => {
+      return order.contentString.includes(search) &&
+        (order.date > dateStart || !dateStart) &&
+        (order.date < dateEnd || !dateEnd);
+    });
+  }
+
   private getECL() {
     this.primavera.getECL().subscribe((res) => {
       this.orders = [];
       this.orders = this.primavera.parseOrderLines(res.DataSet.Table);
+      this.orders.forEach(this.primavera.addContentString);
+      this.filteredOrders = this.filterOrders('', null, null);
       this.isLoading = false;
     }, (err) => {
       this.alertService.error(err);
@@ -59,8 +81,22 @@ export class CustomersOrdersComponent implements OnInit {
     });
   }
 
+  clearDates() {
+    this.form.controls['pickerEnd'].setValue(null);
+    this.form.controls['pickerStart'].setValue(null);
+  }
+
   ngOnInit() {
     this.getECL();
+    this.form = new FormGroup({
+      pickerStart: this.fb.control(null),
+      pickerEnd: this.fb.control(null),
+      search: this.fb.control(''),
+    });
+
+    this.form.valueChanges.subscribe(res => {
+      this.filteredOrders = this.filterOrders(res.search.toLowerCase(), res.pickerStart, res.pickerEnd);
+    });
   }
 
 }
