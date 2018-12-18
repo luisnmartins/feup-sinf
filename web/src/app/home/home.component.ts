@@ -36,8 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.currentToken = token;
             console.log('TOKEN ON SUBSCRIBE: ', this.currentToken);
             if (this.currentToken != null) {
-                this.getAllECL();
-                this.getAllECF();
+                this.loadInfo();
                 this.getRoute();
             }
         });
@@ -66,20 +65,23 @@ export class HomeComponent implements OnInit, OnDestroy {
         });
     }
 
-    private getAllECL() {
-        this.loadingCustomer = true;
-        this.primavera.getECL().subscribe(ecl => {
-            this.ecl = this.primavera.parseOrderLines(ecl.DataSet.Table);
-            this.loadingCustomer = false;
-        });
+    async loadInfo() {
+        await this.getAllECL();
+        await this.getAllECF();
     }
 
-    private getAllECF() {
+    private async getAllECL() {
+        this.loadingCustomer = true;
+        const ecl = await this.primavera.getECL().toPromise();
+        this.ecl = this.primavera.parseOrderLines(ecl.DataSet.Table);
+        this.loadingCustomer = false;
+    }
+
+    private async getAllECF() {
         this.loadingSupplier = true;
-        this.primavera.getECF().subscribe(ecf => {
-            this.ecf = this.primavera.parseOrderLines(ecf.DataSet.Table);
-            this.loadingSupplier = false;
-        });
+        const ecf = await this.primavera.getECF().toPromise();
+        this.ecf = this.primavera.parseOrderLines(ecf.DataSet.Table);
+        this.loadingSupplier = false;
     }
 
     private getRoute() {

@@ -34,10 +34,9 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
     console.log(this.pickedItems);
     for (let i = 0; i < this.items.length; i++) {
       const item = this.items[i];
-      if(isNaN(this.pickedItems[i]) || this.pickedItems[i] < 0 || this.pickedItems[i] > item.quantity) {
-        console.log("Line "+ i+ " has an invalid quantity");
+      if (isNaN(this.pickedItems[i]) || this.pickedItems[i] < 0 || this.pickedItems[i] > item.quantity) {
+        console.log('Line ' + i + ' has an invalid quantity');
         return;
-
       }
       item.quantity = this.pickedItems[i];
     }
