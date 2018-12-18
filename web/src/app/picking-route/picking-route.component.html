@@ -1,10 +1,11 @@
 <h3>Picking Route</h3>
-<button id="submit" mat-raised-button color="accent" [disabled]="waitingResponse || isLoading" (click)="showForm()">Finish Route</button>
+<button id="submit" mat-raised-button color="accent" [disabled]="waitingResponse || isLoading || items.length == 0" (click)="showForm()">Finish Route</button>
 <img *ngIf="waitingResponse" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
 <mat-progress-bar color="warn" *ngIf="isLoading" mode=determinate [value]="progress"></mat-progress-bar>
 <div *ngIf="hasErrors">Error while calculating best route</div>
 <div *ngIf="noRoute">You have no route calculated at the moment. Please go to an orders page to calculate one</div>
-<table mat-table *ngIf="!isLoading" [dataSource]="items" class="mat-elevation-z8 w-100">
+<div *ngIf="!isLoading && items.length != 0">
+  <table mat-table  [dataSource]="items" class="mat-elevation-z8 w-100">
 
     <!-- Location Column -->
     <ng-container matColumnDef="Location">
@@ -33,5 +34,6 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let item; columns: displayedColumns;"></tr>
   </table>
+</div>
       
 
