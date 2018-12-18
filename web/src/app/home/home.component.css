@@ -1,19 +1,38 @@
-.statistics {
+.main {
     display: flex;
     justify-content: space-around;
     padding: 3%;
-    padding-bottom: 10%;
     flex-wrap: wrap;
 }
 
-.stats_row {
+.row {
+    padding: 1em 2.5em;
+    margin-bottom: 3em;
+    margin-left: 1.5em;
+    margin-right: 1.5em;
     display: flex;
     flex-direction: column;
     align-items: center;
+    border: 0.1em solid #d4d4d4;
+    border-radius: 0.5em;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 
+                0 8px 10px 1px rgba(0,0,0,.14), 
+                0 3px 14px 2px rgba(0,0,0,.12);
+    width: 20em;
 }
 
 .stats_element {
     text-align: center;
+    cursor: pointer;
+    justify-content: center;
+}
+
+mat-spinner {
+    margin: 1em auto;
+}
+
+.stats_element:focus {
+    outline: none;
 }
 
 .main_number {

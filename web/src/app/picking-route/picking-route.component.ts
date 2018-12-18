@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators} from '@angular/forms';
 import { PrimaveraService, AlertService } from '@app/_services';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrderLine } from '@app/_models';
@@ -14,7 +14,7 @@ import { isNumber } from 'util';
 export class PickingRouteComponent implements OnInit, OnDestroy {
 
   items: OrderLine[] = [];
-  form: FormGroup;
+  pickedItems: number[] = [];
   isLoading = true;
   noRoute = false;
   hasErrors = false;
@@ -28,11 +28,18 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
     private router: Router,
     private alertService: AlertService,
     private fb: FormBuilder) { }
+    displayedColumns: string[];
 
   showForm() {
+    console.log(this.pickedItems);
     for (let i = 0; i < this.items.length; i++) {
       const item = this.items[i];
-      item.quantity = this.form.value.items[i];
+      if(isNaN(this.pickedItems[i]) || this.pickedItems[i] < 0 || this.pickedItems[i] > item.quantity) {
+        console.log("Line "+ i+ " has an invalid quantity");
+        return;
+
+      }
+      item.quantity = this.pickedItems[i];
     }
     this.waitingResponse = true;
     this.primavera.completeRoute(this.items, this.route.snapshot.queryParams.type).then(res => {
@@ -59,11 +66,9 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
       for (const item of res) {
         const control = this.fb.control('', Validators.required);
         control.setValue(item.quantity);
+        this.pickedItems.push(item.quantity);
         items.push(control);
       }
-      this.form = this.fb.group({
-        items: this.fb.array(items)
-      });
       this.items = res;
       this.isLoading = false;
     }, (error) => {
@@ -72,9 +77,15 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
       console.log('Error calculating optimal route:', error);
       this.hasErrors = true;
     });
+
+    this.displayedColumns = ['Location', 'Name', 'Quantity', 'Picked'];
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  log(name) {
+    console.log(name);
   }
 }

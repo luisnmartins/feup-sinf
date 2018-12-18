@@ -39,6 +39,7 @@ export class PrimaveraService {
 
     stopInterval() {
         clearInterval(this.interval);
+        this.currentTokenSubject.next(null);
     }
 
     async getToken() {
@@ -169,6 +170,7 @@ export class PrimaveraService {
                     return Promise.reject(new Error('Unknown Route type detected. Route type should be on of {Vendas,Compras}'));
             }
             console.log('CREATE TRANSFER: ', transferRes);
+            this.clearRoute();
         } catch (error) {
             console.error(error);
             return Promise.reject(error);
@@ -341,7 +343,7 @@ ${line.quantity}`,
 
     createRoute(items: OrderLine[]) {
         // TODO - insert algorithm here
-        this.currRoute.next(this.route.runAlgorithm(this.currRoute, items));
+        this.currRoute.next(items); //this.route.runAlgorithm(this.currRoute, items)
     }
 
     clearRoute() {

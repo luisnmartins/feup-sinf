@@ -4,16 +4,34 @@
 <mat-progress-bar color="warn" *ngIf="isLoading" mode=determinate [value]="progress"></mat-progress-bar>
 <div *ngIf="hasErrors">Error while calculating best route</div>
 <div *ngIf="noRoute">You have no route calculated at the moment. Please go to an orders page to calculate one</div>
-<mat-list *ngIf="!isLoading" role="list" [formGroup]="form">
-  <div *ngFor="let item of items; let i = index" formArrayName="items">
-    <mat-list-item role="listitem">
-      {{ item.name }}
-      Location: {{ item.location }}
-      Quantity: {{ item.quantity }}
-      <mat-form-field class="">
-        <input matInput type="number" placeholder="Picked" [formControlName]="i" name="picked" value="{{item.quantity}}" min="0" max={{item.quantity}}>
-      </mat-form-field>
-    </mat-list-item>
-     <mat-divider></mat-divider>
-  </div>
-</mat-list>
+<table mat-table *ngIf="!isLoading" [dataSource]="items" class="mat-elevation-z8 w-100">
+
+    <!-- Location Column -->
+    <ng-container matColumnDef="Location">
+      <th mat-header-cell *matHeaderCellDef> Location </th>
+      <td mat-cell *matCellDef="let item"> {{item.location}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="Name">
+      <th mat-header-cell *matHeaderCellDef> Item </th>
+      <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+    </ng-container>
+
+    <!-- Quantity Column -->
+    <ng-container matColumnDef="Quantity">
+      <th mat-header-cell *matHeaderCellDef> Quantity </th>
+      <td mat-cell *matCellDef="let item"> {{item.quantity}} </td>
+    </ng-container>
+
+    <!-- Picked quantity Column -->
+    <ng-container matColumnDef="Picked">
+      <th mat-header-cell *matHeaderCellDef> Picked </th>
+      <td mat-cell *matCellDef="let item; let i = index;"><input matInput type="number" placeholder="Picked"  name="picked" value="{{item.quantity}}" [(ngModel)]="pickedItems[i]" min="0" max={{item.quantity}}></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let item; columns: displayedColumns;"></tr>
+  </table>
+      
+

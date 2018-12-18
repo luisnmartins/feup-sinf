@@ -27,8 +27,10 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.primavera.getToken();
-        this.primavera.startInterval();
+        if(this.currentUser) {
+            this.primavera.getToken();
+            this.primavera.startInterval();
+        }
     }
 
     logout() {
