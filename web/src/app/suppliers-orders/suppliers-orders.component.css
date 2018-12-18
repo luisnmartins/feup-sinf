@@ -2,6 +2,10 @@ mat-form-field.search {
     display: block;
 }
 
+div.first {
+    margin: 1em 5vw;
+}
+
 h3 {
     display: inline-block;
 }
@@ -37,5 +41,9 @@ mat-spinner {
 @media(max-width: 550px){
     #form *{
         width: 100%;
+    }
+
+    div.first{
+        margin: 1em 2vw;
     }
 }

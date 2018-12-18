@@ -30,7 +30,7 @@
       <!-- Picked quantity Column -->
       <ng-container matColumnDef="Picked">
         <th mat-header-cell *matHeaderCellDef> Picked </th>
-        <td mat-cell *matCellDef="let item; let i = index;"><input matInput type="number" placeholder="Picked" name="picked"
+        <td mat-cell *matCellDef="let item; let i = index;"><input matInput class="picker" type="number" placeholder="Picked" name="picked"
             value="{{item.quantity}}" [(ngModel)]="pickedItems[i]" min="0" max={{item.quantity}}></td>
       </ng-container>
   

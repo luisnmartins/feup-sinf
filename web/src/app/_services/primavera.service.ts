@@ -186,6 +186,9 @@ export class PrimaveraService {
         const responses = new Array(); // new Array<Promise<TransformedLine>>();
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
+            if (line.quantity === 0) {
+                continue;
+            }
             const body = {
                 TipoDoc: type === 'Compras' ? 'VGR' : 'GR',
                 Serie: line.series,

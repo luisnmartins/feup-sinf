@@ -1,5 +1,9 @@
 div.first {
-    margin: 2em;
+    margin: 1em 5vw;
+}
+
+input.picker {
+    border-bottom: 1px solid black;
 }
 
 h3 {
@@ -8,4 +12,10 @@ h3 {
 
 button {
     float: right;
+}
+
+@media(max-width: 550px){
+    div.first{
+        margin: 1em 2vw;
+    }
 }

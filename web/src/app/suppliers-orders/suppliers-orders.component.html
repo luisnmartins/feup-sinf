@@ -1,40 +1,43 @@
-<h3>Suppliers Orders</h3>
-<button mat-raised-button *ngIf="!isLoading" [disabled]="!canCreateRoute()" color="accent" (click)="createRoute()" id="submit">Create Route</button>
-<mat-spinner color="accent" *ngIf="isLoading"></mat-spinner>
-<div *ngIf="orders && !orders.length && !isLoading">You have no unfulfilled suppliers' orders</div>
-<div *ngIf="hasErrors">Error getting suppliers' orders</div>
-<hr>
-<form [formGroup]="form" *ngIf="!hasError && !isLoading && orders && orders.length" id="form">
-  <div>
-    <mat-form-field color="accent" class="dateInput">
-      <input matInput [matDatepicker]="pickerStart" formControlName="pickerStart" placeholder="From">
-      <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-      <mat-datepicker #pickerStart></mat-datepicker>
+<div class="first">
+  <h3>Suppliers Orders</h3>
+  <button mat-raised-button *ngIf="!isLoading" [disabled]="!canCreateRoute()" color="accent" (click)="createRoute()" id="submit">Create
+    Route</button>
+  <mat-spinner color="accent" *ngIf="isLoading"></mat-spinner>
+  <div *ngIf="orders && !orders.length && !isLoading">You have no unfulfilled suppliers' orders</div>
+  <div *ngIf="hasErrors">Error getting suppliers' orders</div>
+  <hr>
+  <form [formGroup]="form" *ngIf="!hasError && !isLoading && orders && orders.length" id="form">
+    <div>
+      <mat-form-field color="accent" class="dateInput">
+        <input matInput [matDatepicker]="pickerStart" formControlName="pickerStart" placeholder="From">
+        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field color="accent" class="dateInput">
+        <input matInput [matDatepicker]="pickerEnd" formControlName="pickerEnd" placeholder="To">
+        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+        <mat-datepicker #pickerEnd></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="accent" (click)="clearDates()">Clear Dates</button>
+    <mat-form-field color="accent" *ngIf="!(orders && !orders.length && !isLoading)" class="search">
+      <input matInput placeholder="Search" formControlName="search" value="">
     </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field color="accent" class="dateInput">
-      <input matInput [matDatepicker]="pickerEnd" formControlName="pickerEnd" placeholder="To">
-      <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-      <mat-datepicker #pickerEnd></mat-datepicker>
-    </mat-form-field>
-  </div>
-  <button mat-raised-button color="accent" (click)="clearDates()">Clear Dates</button>
-  <mat-form-field color="accent" *ngIf="!(orders && !orders.length && !isLoading)" class="search">
-    <input matInput placeholder="Search" formControlName="search" value="">
-  </mat-form-field>
-</form>
-<div *ngIf="filteredOrders && !filteredOrders.length && !isLoading">No orders match the current search</div>
-<mat-expansion-panel *ngFor="let order of filteredOrders" class="panel">
-  <mat-expansion-panel-header *ngIf="order">
-    <mat-panel-title>
-      {{ order.docType + '/' + order.docNum }} - {{ order.supplier }}
-    </mat-panel-title>
-    <mat-panel-description>
-      <!-- {{ order.date | date:'d MMM y'}} -->
-      {{ dateDiff(order.date,today) }}
-    </mat-panel-description>
-  </mat-expansion-panel-header>
-  <!-- panel content bellow-->
-  <app-order *ngIf="order" [order]="order"></app-order>
-</mat-expansion-panel>
+  </form>
+  <div *ngIf="filteredOrders && !filteredOrders.length && !isLoading">No orders match the current search</div>
+  <mat-expansion-panel *ngFor="let order of filteredOrders" class="panel">
+    <mat-expansion-panel-header *ngIf="order">
+      <mat-panel-title>
+        {{ order.docType + '/' + order.docNum }} - {{ order.supplier }}
+      </mat-panel-title>
+      <mat-panel-description>
+        <!-- {{ order.date | date:'d MMM y'}} -->
+        {{ order.entName }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <!-- panel content bellow-->
+    <app-order *ngIf="order" [order]="order"></app-order>
+  </mat-expansion-panel>
+</div>
