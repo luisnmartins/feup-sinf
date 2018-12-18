@@ -24,9 +24,9 @@ export class PrimaveraService {
     constructor(private http: HttpClient,
         private route: RouteService,
         private authenticationService: AuthenticationService,
-        ) {
-            this.currentTokenSubject = new BehaviorSubject<TokenRes>(JSON.parse(localStorage.getItem('currentToken')));
-            this.currentToken = this.currentTokenSubject.asObservable();
+    ) {
+        this.currentTokenSubject = new BehaviorSubject<TokenRes>(JSON.parse(localStorage.getItem('currentToken')));
+        this.currentToken = this.currentTokenSubject.asObservable();
     }
 
     public get currentTokenValue(): TokenRes {
@@ -47,7 +47,7 @@ export class PrimaveraService {
         console.log('REQUESTING TOKEN');
         const body = new URLSearchParams();
         body.append('username', 'FEUP'),
-        body.append('password', 'qualquer1');
+            body.append('password', 'qualquer1');
         console.log('COMPANY: ', currUser.company);
         body.append('company', currUser.company);
         body.append('instance', 'DEFAULT');
@@ -87,9 +87,9 @@ export class PrimaveraService {
                 join clientes as Ent ON Ent.cliente = Cab.Entidade
             WHERE Cab.TipoDoc = 'ECL'
             AND CabStat.estado = 'P'"`
-        , {
-            headers: { 'Content-Type': 'application/json' }
-        });
+            , {
+                headers: { 'Content-Type': 'application/json' }
+            });
     }
 
     getECF(): Observable<AdminConsult> {
@@ -116,9 +116,9 @@ export class PrimaveraService {
                 join fornecedores as Ent ON Ent.fornecedor = Cab.Entidade
             WHERE Cab.TipoDoc='ECF'
             AND CabStat.estado = 'P'"`
-        , {
+            , {
                 headers: { 'Content-Type': 'application/json' }
-        });
+            });
     }
 
     async getLocations(): Promise<WarehouseLocation[]> {
@@ -154,22 +154,27 @@ export class PrimaveraService {
             const documents = this.concatTransfLines(responses);
             console.log('NEW DOCUMENTS: ', documents);
             let transferRes;
+            let completeDocs;
             switch (type) {
                 case 'Compras':
                     this.setReceptionLocation(documents);
-                    const completeDocs = await this.fillRelatedData(documents);
+                    completeDocs = await this.fillRelatedData(documents, 'Compras');
                     console.log('COMPLETE DOCS: ', completeDocs);
                     await this.createPurchaseDocument(completeDocs);
+                    console.log('COMPLETED PURCHASES DOCS');
                     transferRes = await this.createTransferFromReception(lines);
+                    console.log('CREATE TRANSFER: ', transferRes);
                     break;
                 case 'Vendas':
-                    console.log('CREATE DOCUMENT: ', await this.createSalesDocument(documents));
+                    completeDocs = await this.fillRelatedData(documents, 'Vendas');
+                    console.log('COMPLETE DOCS: ', completeDocs);
+                    await this.createSalesDocument(completeDocs);
+                    console.log('COMPLETED SALES DOCS');
                     // transferRes = await this.createTransferToExpedition(lines);
                     break;
                 default:
                     return Promise.reject(new Error('Unknown Route type detected. Route type should be on of {Vendas,Compras}'));
             }
-            console.log('CREATE TRANSFER: ', transferRes);
             this.clearRoute();
         } catch (error) {
             console.error(error);
@@ -177,7 +182,7 @@ export class PrimaveraService {
         }
     }
 
-    async transformLines(lines: OrderLine[], type: 'Vendas'|'Compras', formattedDate: string) {
+    async transformLines(lines: OrderLine[], type: 'Vendas' | 'Compras', formattedDate: string) {
         const responses = new Array(); // new Array<Promise<TransformedLine>>();
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
@@ -231,12 +236,12 @@ ${line.quantity}`,
         return responses;
     }
 
-    async fillRelatedData(documents): Promise<any[]> {
+    async fillRelatedData(documents, type): Promise<any[]> {
         const responses: any[] = [];
         const keys = Object.keys(documents);
         for (let i = 0; i < keys.length; i++) {
             const doc = documents[keys[i]];
-            responses.push(await this.http.post(`${environment.primaveraUrl}/Compras/Docs/PreencheDadosRelacionados/`,
+            responses.push(await this.http.post(`${environment.primaveraUrl}/${type}/Docs/PreencheDadosRelacionados/`,
                 doc,
                 { headers: { 'Content-Type': 'application/json' } }).toPromise());
         }
@@ -310,17 +315,17 @@ ${line.quantity}`,
                 PrecUnit: 1.5,
                 INV_EstadoOrigem: 'DISP',
                 LinhasDestino:
-                [
-                    {
-                        Artigo: line.reference,
-                        Armazem: 'A1',
-                        Localizacao: 'A1.rececao',
-                        Lote: '',
-                        Quantidade: line.quantity,
-                        PrecUnit: 1.5,
-                        INV_EstadoDestino: 'DISP'
-                    }
-                ]
+                    [
+                        {
+                            Artigo: line.reference,
+                            Armazem: 'A1',
+                            Localizacao: 'A1.rececao',
+                            Lote: '',
+                            Quantidade: line.quantity,
+                            PrecUnit: 1.5,
+                            INV_EstadoDestino: 'DISP'
+                        }
+                    ]
             });
         });
         return this.createTransfer(origLines);
@@ -343,7 +348,7 @@ ${line.quantity}`,
 
     createRoute(items: OrderLine[]) {
         // TODO - insert algorithm here
-        this.currRoute.next(items); //this.route.runAlgorithm(this.currRoute, items)
+        this.currRoute.next(items); // this.route.runAlgorithm(this.currRoute, items)
     }
 
     clearRoute() {

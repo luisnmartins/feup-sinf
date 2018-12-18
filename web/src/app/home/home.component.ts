@@ -8,7 +8,7 @@ import { UserService, AuthenticationService, PrimaveraService } from '@app/_serv
 import { isNumber } from 'util';
 
 @Component({ templateUrl: 'home.component.html',
-             styleUrls: ['./home.component.css'] 
+             styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
     currentUser: User;
@@ -34,7 +34,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         });
         this.currentTokenSubscription = this.primavera.currentToken.subscribe(token => {
             this.currentToken = token;
-            if(this.currentToken != null) {
+            console.log('TOKEN ON SUBSCRIBE: ', this.currentToken);
+            if (this.currentToken != null) {
                 this.getAllECL();
                 this.getAllECF();
                 this.getRoute();
@@ -84,12 +85,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     private getRoute() {
         this.loadingRoute = true;
         this.primavera.getRoute().subscribe(route => {
-            if(isNumber(route))
+            if (isNumber(route)) {
                 this.route = route;
-            else 
+            } else {
                 this.route = route.length;
+            }
             this.loadingRoute = false;
-        })
+        });
     }
 
     logout() {

@@ -4,3 +4,7 @@
 body {
     background-color: #f2f4f7;
 }
+
+router-outlet {
+    margin: auto 3em;
+}
