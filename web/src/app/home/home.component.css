@@ -1,3 +1,8 @@
+.body{
+    margin:2em !important;
+    padding: 3em;
+}
+
 .main {
     display: flex;
     justify-content: space-around;
@@ -51,4 +56,17 @@ mat-spinner {
 
 #get_token:hover {
     color: grey;
+}
+
+div.hi {
+    display:flex;
+    align-items: center;
+}
+
+div.hi span {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #520101;
+    cursor:pointer;
+    padding-left:0.5em;
 }

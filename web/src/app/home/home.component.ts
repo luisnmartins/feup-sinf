@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 
@@ -23,6 +24,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     loadingRoute = true;
 
     constructor(
+        private router: Router,
         private authenticationService: AuthenticationService,
         private userService: UserService,
         private primavera: PrimaveraService,
@@ -88,5 +90,11 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.route = route.length;
             this.loadingRoute = false;
         })
+    }
+
+    logout() {
+        this.primavera.stopInterval();
+        this.authenticationService.logout();
+        this.router.navigate(['/login']);
     }
 }

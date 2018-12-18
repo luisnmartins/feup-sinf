@@ -1,8 +1,10 @@
-﻿<div>
-<h1>Hi {{currentUser.firstName}}!</h1>
+﻿<div class="body">
+    <div class="hi">
+        <h1>Hi {{currentUser.firstName}}!</h1>
+        <a (click)="logout()"><span class="lnr lnr-power-switch"></span></a>
+    </div>
 <p>Welcome back to Storinator!</p>
 
-</div>
 <div class="main"> 
     <div class="row">
         <div class="stats_element" routerLink="/customersOrders" queryParamsHandling="merge">
@@ -30,3 +32,4 @@
 </div>
 
 <a (click)="primavera.getToken()" id="get_token">Data is not being loaded? Please click here</a>
+</div>
