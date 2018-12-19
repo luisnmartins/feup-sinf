@@ -652,12 +652,20 @@ function bfTravellingSalesman(graph) {
 const LOCATION_MAPPING = {
   'A1.S1.1': 0,
   'A1.S1.2': 1,
-  'A1.S1.3': 5,
+  'A1.S1.3': 9,
   'A1.S1.4': 10,
   'A1.S2.1': 2,
   'A1.S2.2': 3,
   'A1.S2.3': 12,
   'A1.S2.4': 13,
+  'A1.S3.1': 14,
+  'A1.S3.2': 15,
+  'A1.S3.3': 24,
+  'A1.S3.4': 25,
+  'A1.S4.1': 17,
+  'A1.S4.2': 18,
+  'A1.S4.3': 26,
+  'A1.S4.4': 27,
 };
 
 @Injectable({ providedIn: 'root' })

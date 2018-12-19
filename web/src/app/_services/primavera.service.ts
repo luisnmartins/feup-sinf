@@ -351,7 +351,8 @@ ${line.quantity}`,
 
     createRoute(items: OrderLine[]) {
         // TODO - insert algorithm here
-        this.currRoute.next(items); // this.route.runAlgorithm(this.currRoute, items)
+        // this.currRoute.next(items);
+        this.currRoute.next(this.route.runAlgorithm(this.currRoute, items));
     }
 
     clearRoute() {

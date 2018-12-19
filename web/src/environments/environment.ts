@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:4000',
-  primaveraUrl: 'http://localhost:2018/webapi/'
+  primaveraUrl: 'http://lcalhost:2018/webapi/'
 };
 
 /*

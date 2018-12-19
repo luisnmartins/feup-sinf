@@ -4,3 +4,11 @@
 body {
     background-color: #f2f4f7;
 }
+
+.navbar {
+    background-color: #ffd740 !important;
+}
+
+.navbar .nav-item{
+    color: black!important;
+}
