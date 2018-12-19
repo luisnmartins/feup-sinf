@@ -21,6 +21,10 @@ export class AppComponent implements OnInit {
         elem.classList.toggle('collapse');
     }
 
+    isHome() {
+        return /\/\?[^\?]*/g.test(this.router.url);
+    }
+
     expand(event) {
         const dataset = event.target.closest('button').dataset;
         document.querySelector(dataset.target).classList.toggle(dataset.toggle);

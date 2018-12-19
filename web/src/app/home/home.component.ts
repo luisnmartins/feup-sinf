@@ -46,9 +46,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (this.currentToken) {
-            this.loadInfo();
-        }
+        // if (this.currentToken) {
+        //     this.loadInfo();
+        // }
         this.loadAllUsers();
     }
 
