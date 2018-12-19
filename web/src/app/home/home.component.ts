@@ -60,8 +60,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     openDialog(): void {
         const dialogRef = this.dialog.open(MapDialogComponent, {
-            width: '250px',
-            data: { name: 'name', animal: 'my spirit animal' }
+            width: '90vw',
         });
 
         dialogRef.afterClosed().subscribe(result => {

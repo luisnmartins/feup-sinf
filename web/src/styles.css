@@ -12,3 +12,7 @@ body {
 .navbar .nav-item{
     color: black!important;
 }
+
+.mat-dialog-container {
+    max-height: 90vh !important;
+}
