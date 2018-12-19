@@ -26,10 +26,12 @@ import {
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatDialogModule,
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomersOrdersComponent } from './customers-orders/customers-orders.component';
 import { PickingRouteComponent } from './picking-route/picking-route.component';
+import { MapDialogComponent } from './map-dialog/map-dialog.component';
 
 @NgModule({
     imports: [
@@ -47,6 +49,7 @@ import { PickingRouteComponent } from './picking-route/picking-route.component';
         MatProgressBarModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatDialogModule,
         routing,
         FormsModule,
     ],
@@ -59,7 +62,8 @@ import { PickingRouteComponent } from './picking-route/picking-route.component';
         SuppliersOrdersComponent,
         OrderComponent,
         CustomersOrdersComponent,
-        PickingRouteComponent
+        PickingRouteComponent,
+        MapDialogComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
@@ -67,6 +71,9 @@ import { PickingRouteComponent } from './picking-route/picking-route.component';
 
         // provider used to create fake backend
         // fakeBackendProvider
+    ],
+    entryComponents: [
+        MapDialogComponent,
     ],
     bootstrap: [AppComponent]
 })
