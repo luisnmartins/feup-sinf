@@ -11,14 +11,14 @@
         <div class="stats_element" routerLink="/customersOrders" queryParamsHandling="merge">
             <mat-spinner color="accent" *ngIf="loadingCustomer"></mat-spinner>
             <span *ngIf="!loadingCustomer" class="main_number">{{ecl.length}}</span>
-            <p class="main_text">Customer orders to send</p>
+            <p class="main_text">Customers' orders to send</p>
         </div>
     </div>
     <div class="row">
         <div class="stats_element" routerLink="/suppliersOrders" queryParamsHandling="merge">
             <mat-spinner color="accent" *ngIf="loadingSupplier"></mat-spinner>
             <span *ngIf="!loadingSupplier" class="main_number">{{ecf.length}}</span>
-            <p class="main_text">Supplier orders to receive</p>
+            <p class="main_text">Suppliers' orders to receive</p>
         </div>
     </div>
     <div class="row">

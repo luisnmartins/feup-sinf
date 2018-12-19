@@ -16,3 +16,7 @@ body {
 .mat-dialog-container {
     max-height: 90vh !important;
 }
+
+alert div {
+    margin-bottom: 0 !important;
+}
