@@ -12,3 +12,7 @@ body {
 .navbar .nav-item{
     color: black!important;
 }
+
+alert div {
+    margin-bottom: 0 !important;
+}

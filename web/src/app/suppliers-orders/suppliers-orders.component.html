@@ -1,5 +1,5 @@
 <div class="first">
-  <h3>Suppliers Orders</h3>
+  <h3>Suppliers' Orders</h3>
   <button mat-raised-button *ngIf="!isLoading" [disabled]="!canCreateRoute()" color="accent" (click)="createRoute()" id="submit">Create
     Route</button>
   <mat-spinner color="accent" *ngIf="isLoading"></mat-spinner>
@@ -11,14 +11,14 @@
       <mat-form-field color="accent" class="dateInput">
         <input matInput [matDatepicker]="pickerStart" formControlName="pickerStart" placeholder="From">
         <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-        <mat-datepicker #pickerStart></mat-datepicker>
+        <mat-datepicker touchUi #pickerStart></mat-datepicker>
       </mat-form-field>
     </div>
     <div>
       <mat-form-field color="accent" class="dateInput">
         <input matInput [matDatepicker]="pickerEnd" formControlName="pickerEnd" placeholder="To">
         <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-        <mat-datepicker #pickerEnd></mat-datepicker>
+        <mat-datepicker touchUi #pickerEnd></mat-datepicker>
       </mat-form-field>
     </div>
     <button mat-raised-button color="accent" (click)="clearDates()">Clear Dates</button>
@@ -30,7 +30,7 @@
   <mat-expansion-panel *ngFor="let order of filteredOrders" class="panel">
     <mat-expansion-panel-header *ngIf="order">
       <mat-panel-title>
-        {{ order.docType + '/' + order.docNum }} - {{ order.supplier }}
+        {{ order.docType + '/' + order.docNum }} - {{ order.supplier }} - {{order.date | date:'dd/MM/yyyy'}}
       </mat-panel-title>
       <mat-panel-description>
         <!-- {{ order.date | date:'d MMM y'}} -->

@@ -403,6 +403,7 @@ ${line.quantity}`,
         const content = [];
         content.push(order.supplier);
         content.push(order.entName);
+        content.push(order.docNum);
         order.content.forEach((product: Product) => {
             content.push(product.location, product.name, product.reference, product.warehouse);
         });
