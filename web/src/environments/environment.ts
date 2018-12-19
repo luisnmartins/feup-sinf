@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:4000',
-  primaveraUrl: 'http://50761799.ngrok.io/webapi'
+  primaveraUrl: 'lol'
 };
 
 /*

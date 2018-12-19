@@ -18,6 +18,14 @@ button {
     float: right;
 }
 
+a span {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #520101;
+    cursor:pointer;
+    padding-left:0.5em;
+}
+
 @media(max-width: 550px){
     div.first{
         margin: 1em 2vw;

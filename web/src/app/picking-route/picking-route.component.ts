@@ -1,3 +1,5 @@
+import { MapDialogComponent } from './../map-dialog/map-dialog.component';
+import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormBuilder, Validators} from '@angular/forms';
@@ -27,7 +29,8 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private alertService: AlertService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private dialog: MatDialog) { }
     displayedColumns: string[];
 
   showForm() {
@@ -78,6 +81,16 @@ export class PickingRouteComponent implements OnInit, OnDestroy {
     });
 
     this.displayedColumns = ['Location', 'Name', 'Quantity', 'Picked'];
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(MapDialogComponent, {
+      width: '90vw',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 
   ngOnDestroy() {
