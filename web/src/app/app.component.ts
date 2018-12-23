@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
     }
 
     isHome() {
-        console.log(this.router.url);
         return /\/$|\/\?[^\?]*/g.test(this.router.url);
     }
 
